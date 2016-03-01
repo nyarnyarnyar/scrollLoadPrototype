@@ -1,0 +1,109 @@
+<!doctype html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width">
+	<script src="lib/jquery-1.8.0.min.js"></script>
+	<script>
+		$(document).ready(function(){
+			for(var i = 0; i < 5; i++){
+				var item = $(".prot.list-item").clone().removeClass("prot");
+
+				item.css("top",articleListItemHeight()*i+"px")
+				item.css("height",articleListItemHeight())
+				$(".list").append( item );
+			}
+
+
+			$(".list").scroll(function(e){
+				var holder = $(e.currentTarget);
+				var scrollTop=parseInt( $(e.currentTarget).scrollTop() );
+				var listHeight=parseInt( $(".list").css("height") );
+				var limitHeight="5000";
+				if(scrollTop+listHeight > parseInt( holder.find(".list-item").last().css("top") ) ){
+					addItem(1);
+				};
+				if (scrollTop< parseInt( holder.find(".list-item:eq(1)").css("top") ) 
+					&&parseInt( holder.find(".list-item:eq(0)").css("top") )!=0 ) {
+					addItem(0);
+				};
+				if (articleListItemHeight()*holder.find(".list-item").length>limitHeight) {
+					if (scrollTop<parseInt( holder.find(".list-item:eq(1)").css("top") ) ) {
+						holder.find(".list-item").last().remove();
+					}
+					else{
+						holder.find(".list-item").first().remove();
+					}
+				};
+
+				function addItem(position){
+					if (position == 1) {
+						var item = $(".prot.list-item").clone().removeClass("prot");
+						item.css("height",articleListItemHeight());
+						var top=parseInt(holder.find(".list-item").last().css("top") )+articleListItemHeight();
+						item.css("top",top);
+					/*
+						you can change item's content here
+					*/
+						holder.append(item);
+					}
+					else{
+						var item = $(".prot.list-item").clone().removeClass("prot");
+						item.css("height",articleListItemHeight())
+						var top=parseInt(holder.find(".list-item:eq(0)").css("top") )-articleListItemHeight();
+						item.css("top",top);
+					/*
+						you can change item's content here
+					*/	
+						holder.prepend(item);
+					};
+				};
+			})
+		})
+		function articleListItemHeight() {
+			return document.body.clientWidth * 0.88 + 246;
+		}
+	</script>
+	<style type="text/css">
+		*{
+			padding: 0px;
+			margin: 0px;
+		}
+		.page{
+		}
+		.prot{
+			display: none;
+		}
+		.list{
+
+			position: absolute;
+			top: 0;
+			bottom: 0;
+			left:0;
+			right: 0;
+			overflow-y: scroll;
+			box-sizing:border-box;
+		}
+		.list-item{
+			width: 100%;
+			background: #e8e8e8;
+			position: absolute;
+
+		}
+
+		.list-item:nth-child(odd){
+			background:#d6d6d6;
+		}
+	</style>
+</head>
+<body>
+
+	<div class="page">
+
+		<div class="prot list-item"></div>
+		<div class="list">
+
+		</div>
+	</div>
+
+</body>
+</html>
